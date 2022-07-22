@@ -5,6 +5,14 @@
 yarp_install(FILES conf/DnnDetector.ini
                    conf/coco-object-categories.txt
                    conf/object_detection_classes_yolov3_sharon.txt
+                   conf/DnnDetectorSimulation.ini
+                   conf/object_detection_classes_yolov3_sharon_simulation.txt
+                   conf/yolov3-tiny-custom-simulation.cfg
+                   conf/yolov3-tiny-custom-simulation_last.weights
+                   conf/DnnDetectorNonBreakable.ini
+                   conf/yolov3-tiny-custom-non-breakable.cfg
+                   conf/yolov3-tiny-custom-non-breakable_last.weights
+                   conf/yolov3-tiny-custom-non-breakable_final.weights
              DESTINATION ${ROBOTICSLAB-VISION_CONTEXTS_INSTALL_DIR}/DnnDetector)
 
 if(DOWNLOAD_MODELS)

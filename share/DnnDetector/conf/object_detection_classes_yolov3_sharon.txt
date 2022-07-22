@@ -1,4 +1,8 @@
-rice
-milk-bottle
-cup
-glass
+cereals1
+cereals2
+cereals3
+milk1
+milk2
+water
+sugar1
+sugar3

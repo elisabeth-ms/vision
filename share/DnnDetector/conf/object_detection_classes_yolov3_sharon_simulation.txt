@@ -1,0 +1,7 @@
+cereals1
+cereals2
+cereals3
+milk1
+milk2
+nesquick
+water
