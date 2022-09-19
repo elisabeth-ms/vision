@@ -121,15 +121,30 @@ bool DnnDetector::detect(const yarp::sig::Image & inYarpImg, yarp::os::Bottle & 
     inYarpImgBgr.copy(inYarpImg);
     cv::Mat inCvMat = yarp::cv::toCvMat(inYarpImgBgr);
 
-    // adapted from https://docs.opencv.org/4.3.0/d4/db9/samples_2dnn_2object_detection_8cpp-example.html
+    if(inCvMat.cols == 1280){
+        // adapted from https://docs.opencv.org/4.3.0/d4/db9/samples_2dnn_2object_detection_8cpp-example.html
+        cv::Mat squaredImage(1280, 1280, CV_8UC3, cv::Scalar(0, 0, 0));
+        
+        cv::Mat insetImage(squaredImage, cv::Rect(0, 280, 1280, 720));
+        printf("%d %d",squaredImage.cols, squaredImage.rows);
+        inCvMat.copyTo(insetImage);
+        
+        preprocess(squaredImage);
 
-    preprocess(inCvMat);
+        std::vector<cv::Mat> outs;
+        net.forward(outs, outNames);
 
-    std::vector<cv::Mat> outs;
-    net.forward(outs, outNames);
+        postprocess(squaredImage.size(), outs, detectedObjects);
+    }
+    else{
+        preprocess(inCvMat);
 
-    postprocess(inCvMat.size(), outs, detectedObjects);
+        std::vector<cv::Mat> outs;
+        net.forward(outs, outNames);
 
+        postprocess(inCvMat.size(), outs, detectedObjects);
+
+    }
     return true;
 }
 
@@ -140,6 +155,7 @@ void DnnDetector::preprocess(const cv::Mat & frame)
     cv::Mat blob;
 
     // Create a 4D blob from a frame.
+    
     cv::dnn::blobFromImage(frame, blob, 1.0, frame.size(), cv::Scalar(), true, false, CV_8U);
 
     // Run a model.
@@ -228,6 +244,9 @@ void DnnDetector::postprocess(const cv::Size & size, const std::vector<cv::Mat> 
                     int height = (int)(data[3] * size.height);
                     int left = centerX - width / 2;
                     int top = centerY - height / 2;
+                    if(size.width == 1280){
+                        top -=280;
+                    }
 
                     classIds.push_back(classIdPoint.x);
                     confidences.push_back((float)confidence);
